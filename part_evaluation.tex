@@ -21,13 +21,13 @@ As a first timing measurement, we benchmark the local sequential scan component 
 
 The full checkpoint's CHUNK table scan is the largest measured pass: $10.49$~GiB scanned with a median time of $1.091$~s and p95 time of $1.673$~s across 30 warm-cache trials. The corresponding full INDEX scan is $2.06$~GiB with median time $0.213$~s. The measured deltas are smaller by roughly an order of magnitude and therefore have sub-200~ms median scan times in this local microbenchmark. These numbers should be interpreted as a local table-scan component, not a deployed wallet sync latency.
 
-\subsection{Pilot DPF Round Benchmark}
+\subsection{DPF Round Benchmark}
 
-The next timing layer benchmarks a complete local DPF round over the real cuckoo artifacts. The runner \texttt{benchmarks/benchmark\_dpf\_round\_latency.py} builds a small Rust benchmark against \texttt{pir-runtime-core::eval}, memory-maps each current INDEX and CHUNK artifact, generates fresh DPF key shares for random per-group targets, evaluates both local server shares, XORs the two responses, and verifies that each recovered result equals the selected real cuckoo bin. The benchmark uses one warmup and five measured trials per artifact.
+The next timing layer benchmarks a complete local DPF round over the real cuckoo artifacts. The runner \texttt{benchmarks/benchmark\_dpf\_round\_latency.py} builds a small Rust benchmark against \texttt{pir-runtime-core::eval}, memory-maps each current INDEX and CHUNK artifact, generates fresh DPF key shares for random per-group targets, evaluates both local server shares, XORs the two responses, and verifies that each recovered result equals the selected real cuckoo bin. The benchmark uses one warmup and 30 measured trials per artifact.
 
 \input{benchmarks/results/dpf_round_latency_table}
 
-Table~\ref{tab:dpf-round-benchmark} is the first protocol-path latency table over the current real artifacts. Across all six artifact/level combinations, the runner verified $4{,}650$ selected bins with zero failures. For the full checkpoint, the local two-server critical path is $0.522$~s for INDEX and $0.502$~s for CHUNK at the median, where server time is the slower of the two local server-share evaluations. The smaller deltas show the expected scale trend: the $940{,}611 \to 948{,}454$ delta has median total DPF-round times of $0.034$~s for INDEX and $0.043$~s for CHUNK, while the $940{,}611 \to 944{,}000$ delta is $0.023$~s and $0.031$~s. These measurements include DPF key generation, server-side DPF expansion and table XOR, and client-side response XOR/verification. They still exclude WebSocket framing, real client query assignment, Merkle proof retrieval, and network latency.
+Table~\ref{tab:dpf-round-benchmark} is the first 30-trial protocol-path latency table over the current real artifacts. Across all six artifact/level combinations, the runner verified $27{,}900$ selected bins with zero failures. For the full checkpoint, the local two-server critical path is $0.098$~s for INDEX and $0.220$~s for CHUNK at the median, where server time is the slower of the two local server-share evaluations. The corresponding p95 server times are $0.151$~s and $0.437$~s. The smaller deltas show the expected scale trend: the $940{,}611 \to 948{,}454$ delta has median total DPF-round times of $0.009$~s for INDEX and $0.023$~s for CHUNK, while the $940{,}611 \to 944{,}000$ delta is $0.005$~s and $0.013$~s. These measurements include DPF key generation, server-side DPF expansion and table XOR, and client-side response XOR/verification. They still exclude WebSocket framing, real client query assignment, Merkle proof retrieval, and network latency.
 
 \subsection{Pilot HarmonyPIR Offline Hint Benchmark}
 
@@ -55,7 +55,7 @@ Table~\ref{tab:onionpir-synthetic} gives phase-level capacity data only. In this
 
 \subsection{Latency and Throughput Benchmark Matrix}
 
-The remaining end-to-end evaluation should benchmark the same implementation under multiple scales and environments. A publishable latency table should not use a single full-scale run alone: it should show the trend as the database grows and separate preprocessing costs from online query costs.
+The remaining end-to-end evaluation should benchmark the same implementation under multiple scales and environments. A publishable latency table should not use a single full-scale run alone: it should show the trend as the database grows and separate preprocessing costs from online query costs. The repository records the detailed benchmark protocol, environment classes, and promotion criteria in \texttt{benchmarks/BENCHMARK\_PROTOCOL.md}.
 
 \begin{table}[ht]
 \centering
@@ -85,6 +85,7 @@ For OnionPIR, the evaluation must distinguish database preprocessing from online
 
 All benchmark-backed claims in this section should be regenerated from committed artifacts rather than copied from terminal output. The current repository records:
 \begin{itemize}[nolistsep,leftmargin=*]
+    \item \texttt{benchmarks/BENCHMARK\_PROTOCOL.md}: benchmark scale matrix, environment classes, trial discipline, and promotion criteria for publication-grade results.
     \item \texttt{benchmarks/results/artifact\_metrics.csv}: logical and preprocessed artifact sizes for the measured databases.
     \item \texttt{benchmarks/results/dpf\_round\_costs.csv}: exact DPF domain and communication costs derived from cuckoo headers.
     \item \texttt{benchmarks/results/dpf\_round\_latency\_trials.csv}: per-trial local DPF keygen, server evaluation, and client verification timings over real artifacts.

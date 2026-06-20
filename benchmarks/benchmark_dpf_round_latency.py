@@ -120,7 +120,7 @@ def write_tex(path: Path, rows: list[dict[str, object]]) -> None:
     lines += [
         "\\hline",
         "\\end{tabular}",
-        "\\caption{Pilot local warm-cache DPF round benchmark over current real cuckoo artifacts. Each trial generates DPF key shares, evaluates both local server shares, XORs responses, and verifies selected bins. Server latency is reported as the slower of the two local server-share evaluations, matching the two-server parallel critical path without network latency.}",
+        "\\caption{Local warm-cache DPF round benchmark over current real cuckoo artifacts. Each trial generates DPF key shares, evaluates both local server shares, XORs responses, and verifies selected bins. Server latency is reported as the slower of the two local server-share evaluations, matching the two-server parallel critical path without network latency.}",
         "\\label{tab:dpf-round-benchmark}",
         "\\end{table}",
         "",

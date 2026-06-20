@@ -22,12 +22,15 @@ tables. Regenerate them from the local Bitcoin PIR artifact root with:
 ```bash
 ./benchmarks/collect_artifact_metrics.py
 ./benchmarks/benchmark_scan_latency.py --trials 30 --warmups 1
-./benchmarks/benchmark_dpf_round_latency.py --trials 5 --warmups 1
+./benchmarks/benchmark_dpf_round_latency.py --trials 30 --warmups 1
 ./benchmarks/benchmark_harmony_hint_latency.py --trials 3 --warmups 1
 ./benchmarks/benchmark_harmony_online_latency.py --trials 3 --warmups 1
 ./benchmarks/benchmark_onionpir_synthetic.py
 ./build.sh
 ```
+
+The benchmark matrix and promotion criteria are tracked in
+`benchmarks/BENCHMARK_PROTOCOL.md`.
 
 The DPF round benchmark builds a small Rust runner against
 `/Users/cusgadmin/BitcoinPIR/pir-runtime-core` and records local warm-cache
