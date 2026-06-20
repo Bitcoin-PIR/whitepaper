@@ -1,0 +1,149 @@
+OnionPIR Benchmark
+==================
+Testing at two database sizes matching our PBC group estimates.
+Index level: 8224 entries/group, Chunk level: 43053 entries/group
+
+============================================================
+=== Index level (num_entries=8224) ===
+============================================================
+
+[1] params_info:
+  num_entries (padded): 8704
+  entry_size:          3328 bytes
+  num_plaintexts:      8704
+  fst_dim_sz:          512
+  other_dim_sz:        17
+  poly_degree:         2048
+  db_size_mb:          27.62 MB
+  physical_size_mb:    136.00 MB
+  NTT expansion:       4.92x
+
+[2] Populating server with random 8704 entries...
+Generating random data for the server database...
+  populate time (test-path gen_data, populate+preprocess fused): 455.87ms
+
+[2b] Preprocessing (NTT transforms)...
+  preprocess time (fused into populate above): 42.00ns
+
+[3] Saving preprocessed DB to /tmp/onionpir_bench_index.bin...
+DB gen+NTT+realign: 329 ms
+Saved preprocessed DB to /tmp/onionpir_bench_index.bin (136 MB)
+  file size: 136.00 MB (136.00 MB)
+  expansion vs logical: 4.92x
+
+[4] Generating client keys...
+  client_id:       16807
+  galois_keys:     2.50 MB (gen time: 10.81ms)
+  gsw_keys:        512.01 KB (gen time: 67.83µs)
+  total keys:      3.00 MB
+
+[5] Registering keys with server...
+  registration time: 330.25µs
+
+[6] Generating query for index 42...
+  query size:      32.01 KB (gen time: 118.71µs)
+
+[7] Answering queries (10x for timing)...
+  response size:   11.00 KB
+  answer_query avg: 303.37ms (10 rounds)
+
+[8] Decrypting response...
+Noise budget after decryption: 1 (max noise: 109)
+  decrypted size:  3.25 KB (time: 383.12µs)
+  verification:    MISMATCH! expected index=42, got=3703750172425108867
+
+--- Index level Summary ---
+  Entries:         8224 (padded to 8704)
+  Entry size:      3328 bytes
+  Preprocess:      42.00ns
+  DB file:         136.00 MB
+  Keys total:      3.00 MB
+  Query size:      32.01 KB
+  Response size:   11.00 KB
+  Query time:      303.37ms avg
+  Decrypt time:    383.12µs
+
+============================================================
+=== Chunk level (num_entries=43053) ===
+============================================================
+
+[1] params_info:
+  num_entries (padded): 43520
+  entry_size:          3328 bytes
+  num_plaintexts:      43520
+  fst_dim_sz:          512
+  other_dim_sz:        85
+  poly_degree:         2048
+  db_size_mb:          138.12 MB
+  physical_size_mb:    680.00 MB
+  NTT expansion:       4.92x
+
+[2] Populating server with random 43520 entries...
+Generating random data for the server database...
+  populate time (test-path gen_data, populate+preprocess fused): 2.10s
+
+[2b] Preprocessing (NTT transforms)...
+  preprocess time (fused into populate above): 42.00ns
+
+[3] Saving preprocessed DB to /tmp/onionpir_bench_chunk.bin...
+DB gen+NTT+realign: 1316 ms
+Saved preprocessed DB to /tmp/onionpir_bench_chunk.bin (680 MB)
+  file size: 680.00 MB (680.00 MB)
+  expansion vs logical: 4.92x
+
+[4] Generating client keys...
+  client_id:       282475249
+  galois_keys:     2.50 MB (gen time: 11.77ms)
+  gsw_keys:        512.01 KB (gen time: 70.46µs)
+  total keys:      3.00 MB
+
+[5] Registering keys with server...
+  registration time: 684.46µs
+
+[6] Generating query for index 42...
+  query size:      32.01 KB (gen time: 140.50µs)
+
+[7] Answering queries (10x for timing)...
+  response size:   11.00 KB
+  answer_query avg: 581.10ms (10 rounds)
+
+[8] Decrypting response...
+Noise budget after decryption: 0 (max noise: 128)
+  decrypted size:  3.25 KB (time: 230.38µs)
+  verification:    MISMATCH! expected index=42, got=15160446040217410411
+
+--- Chunk level Summary ---
+  Entries:         43053 (padded to 43520)
+  Entry size:      3328 bytes
+  Preprocess:      42.00ns
+  DB file:         680.00 MB
+  Keys total:      3.00 MB
+  Query size:      32.01 KB
+  Response size:   11.00 KB
+  Query time:      581.10ms avg
+  Decrypt time:    230.38µs
+
+============================================================
+=== Key Reusability Test ===
+============================================================
+
+Testing: can keys generated for num_entries=8224 work on a server with num_entries=43053?
+Generating random data for the server database...
+  set_galois_key + set_gsw_key: OK (no panic)
+  answer_query with cross keys: OK (returned response)
+
+Control test: keys from num_entries=43053 on server with same num_entries...
+DB gen+NTT+realign: 1165 ms
+Generating random data for the server database...
+  Control: OK
+
+=== Benchmark complete ===
+
+--- Full System Projections ---
+Based on measured values above:
+  Index batch (75 groups):  75 x query_time = estimated total
+  Chunk batch (80 groups):  80 x query_time = estimated total
+  Per-request upload:  155 x query_size
+  Per-request download: 155 x response_size
+  One-time key upload: 2 x total_key_size (if keys not reusable across configs)
+DB gen+NTT+realign: 1159 ms

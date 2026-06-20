@@ -1,0 +1,21 @@
+{
+  "collected_at_utc": "2026-06-20T06:43:05.635400+00:00",
+  "command": [
+    "cargo",
+    "run",
+    "--release",
+    "-p",
+    "runtime",
+    "--bin",
+    "onionpir_bench"
+  ],
+  "runtime_repo": "/Users/cusgadmin/BitcoinPIR",
+  "runtime_git_rev": "db99175ffc4963396da10d53b07d55e43725783c",
+  "whitepaper_git_rev": "849d9b9b5f236c6c1be4e81747a4979ecfab1f84",
+  "system": "macOS-26.5.1-arm64-arm-64bit",
+  "cpu": "Apple M2 Ultra",
+  "logical_cpus": "24",
+  "memory_bytes": "68719476736",
+  "returncode": 0,
+  "stderr": ""
+}

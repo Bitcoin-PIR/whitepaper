@@ -21,6 +21,14 @@ As a first timing measurement, we benchmark the local sequential scan component 
 
 The full checkpoint's CHUNK table scan is the largest measured pass: $10.49$~GiB scanned with a median time of $1.091$~s and p95 time of $1.673$~s across 30 warm-cache trials. The corresponding full INDEX scan is $2.06$~GiB with median time $0.213$~s. The measured deltas are smaller by roughly an order of magnitude and therefore have sub-200~ms median scan times in this local microbenchmark. These numbers should be interpreted as a local table-scan component, not a deployed wallet sync latency.
 
+\subsection{OnionPIR Synthetic-Capacity Phase Benchmark}
+
+We also record one interim OnionPIR timing run from the current runtime benchmark. The runner \texttt{benchmarks/benchmark\_onionpir\_synthetic.py} invokes \texttt{cargo run --release -p runtime --bin onionpir\_bench} in the implementation repository, parses the benchmark output, and emits both machine-readable CSV and the table below. This benchmark uses the OnionPIR random-data path at the same per-group capacities used by the runtime: $8{,}224$ requested INDEX entries and $43{,}053$ requested CHUNK entries.
+
+\input{benchmarks/results/onionpir_synthetic_table}
+
+Table~\ref{tab:onionpir-synthetic} gives phase-level capacity data only. In this run, the INDEX capacity used a 136~MB NTT store and averaged $0.303$~s per server answer across 10 rounds; the CHUNK capacity used a 680~MB NTT store and averaged $0.581$~s. Both capacities used a 3.00~MB client key upload, 32.01~KB query, and 11.00~KB response. The benchmark is useful for the relative scale of OnionPIR FHE phases, but it is not a final real-artifact result. The current \texttt{onionpir\_bench} binary calls \texttt{PirServer::gen\_data(\&[])}, so the generated random server data does not match the deterministic \texttt{entries} vector used by the verification printout; the raw benchmark log accordingly reports a mismatch. Therefore, these numbers are not used as correctness evidence or as end-to-end deployed wallet latency.
+
 \subsection{Latency and Throughput Benchmark Matrix}
 
 The remaining end-to-end evaluation should benchmark the same implementation under multiple scales and environments. A publishable latency table should not use a single full-scale run alone: it should show the trend as the database grows and separate preprocessing costs from online query costs.
@@ -57,8 +65,11 @@ All benchmark-backed claims in this section should be regenerated from committed
     \item \texttt{benchmarks/results/dpf\_round\_costs.csv}: exact DPF domain and communication costs derived from cuckoo headers.
     \item \texttt{benchmarks/results/scan\_latency\_trials.csv}: per-trial local scan timings for INDEX and CHUNK cuckoo artifacts.
     \item \texttt{benchmarks/results/scan\_latency\_summary.csv}: median and tail summaries derived from the scan trials.
+    \item \texttt{benchmarks/results/onionpir\_synthetic\_summary.csv}: parsed OnionPIR synthetic-capacity phase results.
+    \item \texttt{benchmarks/results/onionpir\_synthetic\_stdout.txt}: raw runtime benchmark log used to generate the OnionPIR table.
+    \item \texttt{benchmarks/results/onionpir\_synthetic\_environment.json}: runtime command, git revision, and machine metadata for the OnionPIR run.
     \item \texttt{benchmarks/results/environment.json}: hardware, operating system, and git revision metadata for the collection run.
-    \item \texttt{benchmarks/results/artifact\_tables.tex} and \texttt{benchmarks/results/scan\_latency\_table.tex}: generated tables included in this paper.
+    \item \texttt{benchmarks/results/artifact\_tables.tex}, \texttt{benchmarks/results/scan\_latency\_table.tex}, and \texttt{benchmarks/results/onionpir\_synthetic\_table.tex}: generated tables included in this paper.
 \end{itemize}
 
-The next benchmark step is to add end-to-end protocol runners that emit machine-readable CSV with one row per trial. Those runners should be responsible for DPF key generation, DPF expansion, HarmonyPIR hint and online phases, OnionPIR key/query/answer/decrypt phases, Merkle proof verification, cache-state labeling, and network environment labeling, so the paper can report medians and tail latencies without hand-editing results.
+The next benchmark step is to add end-to-end protocol runners that emit machine-readable CSV with one row per trial. Those runners should be responsible for DPF key generation, DPF expansion, HarmonyPIR hint and online phases, OnionPIR real-artifact key/query/answer/decrypt phases, Merkle proof verification, cache-state labeling, and network environment labeling, so the paper can report medians and tail latencies without hand-editing results.

@@ -1,0 +1,3 @@
+level,num_entries,padded_entries,entry_size_bytes,logical_db_mb,physical_db_mb,ntt_expansion,populate_ntt_s,save_ntt_realign_s,galois_keys_bytes,galois_keygen_s,gsw_keys_bytes,gsw_keygen_s,total_keys_bytes,query_bytes,query_gen_s,response_bytes,answer_avg_s,decrypt_bytes,decrypt_s,timing_rounds,verification
+index,8224,8704,3328,27.62,136.00,4.92,0.455870000,0.329000000,2621440,0.010810000,524298,0.000067830,3145728,32778,0.000118710,11264,0.303370000,3328,0.000383120,10,"MISMATCH! expected index=42, got=3703750172425108867"
+chunk,43053,43520,3328,138.12,680.00,4.92,2.100000000,1.316000000,2621440,0.011770000,524298,0.000070460,3145728,32778,0.000140500,11264,0.581100000,3328,0.000230380,10,"MISMATCH! expected index=42, got=15160446040217410411"
