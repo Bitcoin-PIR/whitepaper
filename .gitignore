@@ -13,6 +13,7 @@
 
 # Local/editor files
 .DS_Store
+benchmarks/.scan_file_bin
 
 # Agent handoff notes are local coordination artifacts, not paper source.
 AGENT_HANDOFF_*.md

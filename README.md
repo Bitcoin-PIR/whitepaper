@@ -21,5 +21,6 @@ tables. Regenerate them from the local Bitcoin PIR artifact root with:
 
 ```bash
 ./benchmarks/collect_artifact_metrics.py
+./benchmarks/benchmark_scan_latency.py --trials 30 --warmups 1
 ./build.sh
 ```

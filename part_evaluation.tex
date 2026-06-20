@@ -13,9 +13,17 @@ Several immediate conclusions follow from Table~\ref{tab:artifact-sizes}. The DP
 
 Table~\ref{tab:dpf-round-costs} gives the exact two-server DPF communication for one PBC round at the INDEX and CHUNK levels. These are not extrapolated timing measurements: they are derived from the current table headers. The full checkpoint uses $n=20$ for INDEX and $n=21$ for CHUNK, while the measured delta uses $n=16$ and $n=17$. The smaller delta domain lowers DPF key size, though the bucket response size remains fixed by the slot layout.
 
+\subsection{Pilot Local Scan Benchmark}
+
+As a first timing measurement, we benchmark the local sequential scan component over the same cuckoo artifacts. The runner \texttt{benchmarks/benchmark\_scan\_latency.py} compiles a small Rust scanner and performs one warmup plus 30 measured warm-cache trials per artifact. The scanner skips the cuckoo header, streams the table body, and touches one byte per 64-byte cache line to prevent the read loop from being optimized away. This is not an end-to-end DPF or HarmonyPIR benchmark: it does not include DPF key generation, DPF expansion, conditional XOR of selected bins, client-side verification, WebSocket framing, network latency, or Merkle proof queries. It is useful because the two-server online path is dominated by scanning these large tables, and the measurement shows the scale of that component under a fixed local environment.
+
+\input{benchmarks/results/scan_latency_table}
+
+The full checkpoint's CHUNK table scan is the largest measured pass: $10.49$~GiB scanned with a median time of $1.091$~s and p95 time of $1.673$~s across 30 warm-cache trials. The corresponding full INDEX scan is $2.06$~GiB with median time $0.213$~s. The measured deltas are smaller by roughly an order of magnitude and therefore have sub-200~ms median scan times in this local microbenchmark. These numbers should be interpreted as a local table-scan component, not a deployed wallet sync latency.
+
 \subsection{Latency and Throughput Benchmark Matrix}
 
-The remaining evaluation should benchmark the same implementation under multiple scales and environments. A publishable latency table should not use a single full-scale run alone: it should show the trend as the database grows and separate preprocessing costs from online query costs.
+The remaining end-to-end evaluation should benchmark the same implementation under multiple scales and environments. A publishable latency table should not use a single full-scale run alone: it should show the trend as the database grows and separate preprocessing costs from online query costs.
 
 \begin{table}[ht]
 \centering
@@ -47,8 +55,10 @@ All benchmark-backed claims in this section should be regenerated from committed
 \begin{itemize}[nolistsep,leftmargin=*]
     \item \texttt{benchmarks/results/artifact\_metrics.csv}: logical and preprocessed artifact sizes for the measured databases.
     \item \texttt{benchmarks/results/dpf\_round\_costs.csv}: exact DPF domain and communication costs derived from cuckoo headers.
+    \item \texttt{benchmarks/results/scan\_latency\_trials.csv}: per-trial local scan timings for INDEX and CHUNK cuckoo artifacts.
+    \item \texttt{benchmarks/results/scan\_latency\_summary.csv}: median and tail summaries derived from the scan trials.
     \item \texttt{benchmarks/results/environment.json}: hardware, operating system, and git revision metadata for the collection run.
-    \item \texttt{benchmarks/results/artifact\_tables.tex}: generated tables included in this paper.
+    \item \texttt{benchmarks/results/artifact\_tables.tex} and \texttt{benchmarks/results/scan\_latency\_table.tex}: generated tables included in this paper.
 \end{itemize}
 
-The next benchmark step is to add latency runners that emit machine-readable CSV with one row per trial. Those runners should be responsible for warmup, trial count, cache-state labeling, and protocol-specific phases, so the paper can report medians and tail latencies without hand-editing results.
+The next benchmark step is to add end-to-end protocol runners that emit machine-readable CSV with one row per trial. Those runners should be responsible for DPF key generation, DPF expansion, HarmonyPIR hint and online phases, OnionPIR key/query/answer/decrypt phases, Merkle proof verification, cache-state labeling, and network environment labeling, so the paper can report medians and tail latencies without hand-editing results.
