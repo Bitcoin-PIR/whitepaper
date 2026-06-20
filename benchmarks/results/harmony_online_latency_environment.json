@@ -1,0 +1,31 @@
+{
+  "collected_at_utc": "2026-06-20T07:17:27.054045+00:00",
+  "command": [
+    "cargo",
+    "run",
+    "--release",
+    "--manifest-path",
+    "benchmarks/harmony_online_bench/Cargo.toml",
+    "--",
+    "--data-root",
+    "/Volumes/Bitcoin/data",
+    "--trials",
+    "3",
+    "--warmups",
+    "1",
+    "--database",
+    "all",
+    "--level",
+    "all",
+    "--backend",
+    "all"
+  ],
+  "system": "macOS-26.5.1-arm64-arm-64bit",
+  "cpu": "Apple M2 Ultra",
+  "logical_cpus": "24",
+  "memory_bytes": "68719476736",
+  "bitcoinpir_git_rev": "db99175ffc4963396da10d53b07d55e43725783c",
+  "whitepaper_git_rev": "6109b84bec6ca16def49bdff923fb85f0393c311",
+  "returncode": 0,
+  "stderr_tail": "    Finished `release` profile [optimized] target(s) in 0.39s\n     Running `benchmarks/.harmony_online_target/release/harmony-online-bench --data-root /Volumes/Bitcoin/data --trials 3 --warmups 1 --database all --level all --backend all`\nfull_948454 index: /Volumes/Bitcoin/data/checkpoints/948454/batch_pir_cuckoo.bin\n  warmup touch checksum 17\n  backend hmr12\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\n  backend fastprp\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\nfull_948454 chunk: /Volumes/Bitcoin/data/checkpoints/948454/chunk_pir_cuckoo.bin\n  warmup touch checksum c1\n  backend hmr12\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\n  backend fastprp\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\ndelta_940611_948454 index: /Volumes/Bitcoin/data/deltas/940611_948454/batch_pir_cuckoo.bin\n  warmup touch checksum 46\n  backend hmr12\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\n  backend fastprp\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\ndelta_940611_948454 chunk: /Volumes/Bitcoin/data/deltas/940611_948454/chunk_pir_cuckoo.bin\n  warmup touch checksum dc\n  backend hmr12\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\n  backend fastprp\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\ndelta_940611_944000 index: /Volumes/Bitcoin/data/deltas/940611_944000/batch_pir_cuckoo.bin\n  warmup touch checksum c6\n  backend hmr12\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\n  backend fastprp\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\ndelta_940611_944000 chunk: /Volumes/Bitcoin/data/deltas/940611_944000/chunk_pir_cuckoo.bin\n  warmup touch checksum 90\n  backend hmr12\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3\n  backend fastprp\n    warmup 1/1\n    trial 1/3\n    trial 2/3\n    trial 3/3"
+}
