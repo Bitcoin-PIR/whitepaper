@@ -15,6 +15,7 @@
 .DS_Store
 benchmarks/.scan_file_bin
 benchmarks/.dpf_target
+benchmarks/.harmony_target
 
 # Agent handoff notes are local coordination artifacts, not paper source.
 AGENT_HANDOFF_*.md

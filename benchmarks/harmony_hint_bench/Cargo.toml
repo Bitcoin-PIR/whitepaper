@@ -1,0 +1,12 @@
+[package]
+name = "harmony-hint-bench"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+harmonypir = { git = "https://github.com/Bitcoin-PIR/harmonypir.git", rev = "60635d8e526629b2ba99ec5020a55d078a299660", default-features = false, features = ["fastprp-prp"] }
+harmonypir-wasm = { path = "/Users/cusgadmin/BitcoinPIR/harmonypir-wasm", features = ["fastprp"] }
+memmap2 = "0.9"
+pir-core = { path = "/Users/cusgadmin/BitcoinPIR/pir-core" }
+rayon = "1.10"
