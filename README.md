@@ -25,6 +25,7 @@ tables. Regenerate them from the local Bitcoin PIR artifact root with:
 ./benchmarks/benchmark_dpf_round_latency.py --trials 30 --warmups 1
 ./benchmarks/benchmark_harmony_hint_latency.py --trials 3 --warmups 1
 ./benchmarks/benchmark_harmony_online_latency.py --trials 30 --warmups 1
+./benchmarks/benchmark_merkle_latency.py --trials 30 --warmups 1
 ./benchmarks/benchmark_onionpir_synthetic.py
 ./build.sh
 ```
@@ -38,6 +39,11 @@ key generation, two-server-share evaluation, and client verification timings.
 The HarmonyPIR benchmark builds a small Rust runner against
 `/Users/cusgadmin/BitcoinPIR/harmonypir-wasm` and records local warm-cache
 offline hint-generation and online-query timings for HMR12 and FastPRP.
+The Merkle benchmark builds a Rust runner against the real bucket-Merkle
+sibling tables and records local DPF sibling retrieval plus client hash
+verification timings. It also checks that the bucket-Merkle roots match the
+current cuckoo table bytes; regenerate bucket-Merkle artifacts from the
+current BitcoinPIR builder if this benchmark reports verification failures.
 The OnionPIR benchmark calls the runtime implementation in
 `/Users/cusgadmin/BitcoinPIR` and records a synthetic-capacity phase timing.
 It is not a real-artifact end-to-end latency benchmark.

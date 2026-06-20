@@ -58,11 +58,11 @@ latency.
 | --- | --- | --- |
 | Artifact sizes and DPF wire cost | Deterministic CSV/TeX from `collect_artifact_metrics.py`. | Add future checkpoint and verify deterministic root bundle provenance. |
 | Local scan baseline | 30 warm-cache trials over current real artifacts. | Add cold-cache runs and explain storage/cache conditions. |
-| DPF-PIR local online round | 30 warm-cache trials over current real artifacts; verifies selected bins. | Add deployed WebSocket, wallet query assignment, and Merkle proof retrieval/verification. |
+| DPF-PIR local online round | 30 warm-cache trials over current real artifacts; verifies selected bins. | Add deployed WebSocket, wallet query assignment, and composition with Merkle proof timings. |
 | HarmonyPIR offline hints | 3 warm-cache trials over current real artifacts for HMR12 and FastPRP. | Add networked hint download timing and increase expensive preprocessing repetitions where final claims need tighter tails. |
 | HarmonyPIR online query | 30 warm-cache trials over current real artifacts for HMR12 and FastPRP; verifies recovered bins. | Add networked hint download, browser/WASM client timing, and deployed query-server placement. |
 | OnionPIR | Synthetic-capacity phase timing only. | Replace with a correctness-preserving real-artifact run before using it as end-to-end evidence. |
-| Merkle proof path | Artifact sizes are recorded indirectly. | Add proof retrieval and verification timing for each protocol path. |
+| Merkle proof path | 30 warm-cache trials over current bucket-Merkle sibling tables; verifies one randomized bin proof per PBC group. | Add deployed WebSocket timing and protocol-specific composition with full wallet query plans. |
 
 ## Promotion Criteria
 
@@ -89,8 +89,19 @@ Current local warm-cache commands:
 ./benchmarks/benchmark_dpf_round_latency.py --trials 30 --warmups 1
 ./benchmarks/benchmark_harmony_hint_latency.py --trials 3 --warmups 1
 ./benchmarks/benchmark_harmony_online_latency.py --trials 30 --warmups 1
+./benchmarks/benchmark_merkle_latency.py --trials 30 --warmups 1
 ./benchmarks/benchmark_onionpir_synthetic.py
 ./build.sh
+```
+
+The Merkle benchmark is a correctness benchmark as well as a timing benchmark:
+it must report zero verification failures. If the cuckoo files were rebuilt
+after the bucket-Merkle files, regenerate the bucket-Merkle artifacts first
+from the current BitcoinPIR builder:
+
+```bash
+/Users/cusgadmin/BitcoinPIR/target/release/gen_4_build_merkle_bucket \
+  --data-dir <artifact-dir>
 ```
 
 To rerun only one selected HarmonyPIR online row while iterating, use:
