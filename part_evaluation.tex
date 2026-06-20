@@ -21,6 +21,14 @@ As a first timing measurement, we benchmark the local sequential scan component 
 
 The full checkpoint's CHUNK table scan is the largest measured pass: $10.49$~GiB scanned with a median time of $1.091$~s and p95 time of $1.673$~s across 30 warm-cache trials. The corresponding full INDEX scan is $2.06$~GiB with median time $0.213$~s. The measured deltas are smaller by roughly an order of magnitude and therefore have sub-200~ms median scan times in this local microbenchmark. These numbers should be interpreted as a local table-scan component, not a deployed wallet sync latency.
 
+\subsection{Pilot DPF Round Benchmark}
+
+The next timing layer benchmarks a complete local DPF round over the real cuckoo artifacts. The runner \texttt{benchmarks/benchmark\_dpf\_round\_latency.py} builds a small Rust benchmark against \texttt{pir-runtime-core::eval}, memory-maps each current INDEX and CHUNK artifact, generates fresh DPF key shares for random per-group targets, evaluates both local server shares, XORs the two responses, and verifies that each recovered result equals the selected real cuckoo bin. The benchmark uses one warmup and five measured trials per artifact.
+
+\input{benchmarks/results/dpf_round_latency_table}
+
+Table~\ref{tab:dpf-round-benchmark} is the first protocol-path latency table over the current real artifacts. Across all six artifact/level combinations, the runner verified $4{,}650$ selected bins with zero failures. For the full checkpoint, the local two-server critical path is $0.522$~s for INDEX and $0.502$~s for CHUNK at the median, where server time is the slower of the two local server-share evaluations. The smaller deltas show the expected scale trend: the $940{,}611 \to 948{,}454$ delta has median total DPF-round times of $0.034$~s for INDEX and $0.043$~s for CHUNK, while the $940{,}611 \to 944{,}000$ delta is $0.023$~s and $0.031$~s. These measurements include DPF key generation, server-side DPF expansion and table XOR, and client-side response XOR/verification. They still exclude WebSocket framing, real client query assignment, Merkle proof retrieval, and network latency.
+
 \subsection{OnionPIR Synthetic-Capacity Phase Benchmark}
 
 We also record one interim OnionPIR timing run from the current runtime benchmark. The runner \texttt{benchmarks/benchmark\_onionpir\_synthetic.py} invokes \texttt{cargo run --release -p runtime --bin onionpir\_bench} in the implementation repository, parses the benchmark output, and emits both machine-readable CSV and the table below. This benchmark uses the OnionPIR random-data path at the same per-group capacities used by the runtime: $8{,}224$ requested INDEX entries and $43{,}053$ requested CHUNK entries.
@@ -51,7 +59,7 @@ Repetition & At least 30 online-query trials per configuration after a fixed war
 \label{tab:benchmark-matrix}
 \end{table}
 
-For DPF-PIR, the primary scaling variable is the number of bins per group. The benchmark should report INDEX and CHUNK separately because the INDEX response is small but drives chunk discovery, while CHUNK scans dominate payload retrieval. The current exact communication table gives the wire cost; the timing benchmark must additionally measure DPF key generation, per-server scan time, and client-side XOR/tag verification.
+For DPF-PIR, the primary scaling variable is the number of bins per group. The benchmark should report INDEX and CHUNK separately because the INDEX response is small but drives chunk discovery, while CHUNK scans dominate payload retrieval. The current exact communication table gives the wire cost, and the pilot DPF runner now measures local key generation, per-server DPF evaluation, table XOR, and client-side response verification. A final deployed benchmark must additionally cover real wallet query assignment, WebSocket framing, network placement, Merkle proof verification, and at least 30 trials per scale.
 
 For HarmonyPIR, offline and online measurements must be separated. The offline hint phase is paid when the client prepares a stateful session and should be reported as a one-time cost per database and per PRP backend. The online phase should report request construction, server response time, response processing, and query budget consumption. The paper should include both HMR12 and FastPRP results if both are supported by the deployment being evaluated.
 
@@ -63,13 +71,16 @@ All benchmark-backed claims in this section should be regenerated from committed
 \begin{itemize}[nolistsep,leftmargin=*]
     \item \texttt{benchmarks/results/artifact\_metrics.csv}: logical and preprocessed artifact sizes for the measured databases.
     \item \texttt{benchmarks/results/dpf\_round\_costs.csv}: exact DPF domain and communication costs derived from cuckoo headers.
+    \item \texttt{benchmarks/results/dpf\_round\_latency\_trials.csv}: per-trial local DPF keygen, server evaluation, and client verification timings over real artifacts.
+    \item \texttt{benchmarks/results/dpf\_round\_latency\_summary.csv}: median and tail summaries derived from the DPF round trials.
+    \item \texttt{benchmarks/results/dpf\_round\_latency\_environment.json}: command, git revision, and machine metadata for the DPF round run.
     \item \texttt{benchmarks/results/scan\_latency\_trials.csv}: per-trial local scan timings for INDEX and CHUNK cuckoo artifacts.
     \item \texttt{benchmarks/results/scan\_latency\_summary.csv}: median and tail summaries derived from the scan trials.
     \item \texttt{benchmarks/results/onionpir\_synthetic\_summary.csv}: parsed OnionPIR synthetic-capacity phase results.
     \item \texttt{benchmarks/results/onionpir\_synthetic\_stdout.txt}: raw runtime benchmark log used to generate the OnionPIR table.
     \item \texttt{benchmarks/results/onionpir\_synthetic\_environment.json}: runtime command, git revision, and machine metadata for the OnionPIR run.
     \item \texttt{benchmarks/results/environment.json}: hardware, operating system, and git revision metadata for the collection run.
-    \item \texttt{benchmarks/results/artifact\_tables.tex}, \texttt{benchmarks/results/scan\_latency\_table.tex}, and \texttt{benchmarks/results/onionpir\_synthetic\_table.tex}: generated tables included in this paper.
+    \item \texttt{benchmarks/results/artifact\_tables.tex}, \texttt{benchmarks/results/scan\_latency\_table.tex}, \texttt{benchmarks/results/dpf\_round\_latency\_table.tex}, and \texttt{benchmarks/results/onionpir\_synthetic\_table.tex}: generated tables included in this paper.
 \end{itemize}
 
-The next benchmark step is to add end-to-end protocol runners that emit machine-readable CSV with one row per trial. Those runners should be responsible for DPF key generation, DPF expansion, HarmonyPIR hint and online phases, OnionPIR real-artifact key/query/answer/decrypt phases, Merkle proof verification, cache-state labeling, and network environment labeling, so the paper can report medians and tail latencies without hand-editing results.
+The next benchmark step is to extend the DPF runner from local warm-cache trials to deployed WebSocket trials, and to add comparable end-to-end runners for HarmonyPIR hint and online phases, OnionPIR real-artifact key/query/answer/decrypt phases, and Merkle proof verification. Those runners should preserve the same one-row-per-trial CSV discipline and add cache-state, network environment, and client/runtime labels, so the paper can report medians and tail latencies without hand-editing results.

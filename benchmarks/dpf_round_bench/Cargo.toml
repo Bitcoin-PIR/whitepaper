@@ -1,0 +1,12 @@
+[package]
+name = "dpf-round-bench"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+libdpf = { git = "https://github.com/weikengchen/libdpf.git", rev = "8ceb5903ae38c6f16a5ee92c0706dd50f5a42110" }
+memmap2 = "0.9"
+pir-core = { path = "/Users/cusgadmin/BitcoinPIR/pir-core" }
+pir-runtime-core = { path = "/Users/cusgadmin/BitcoinPIR/pir-runtime-core" }
+rayon = "1.10"

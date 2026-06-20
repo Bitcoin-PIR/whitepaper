@@ -1,0 +1,29 @@
+{
+  "collected_at_utc": "2026-06-20T06:51:52.196656+00:00",
+  "command": [
+    "cargo",
+    "run",
+    "--release",
+    "--manifest-path",
+    "benchmarks/dpf_round_bench/Cargo.toml",
+    "--",
+    "--data-root",
+    "/Volumes/Bitcoin/data",
+    "--trials",
+    "5",
+    "--warmups",
+    "1",
+    "--database",
+    "all",
+    "--level",
+    "all"
+  ],
+  "system": "macOS-26.5.1-arm64-arm-64bit",
+  "cpu": "Apple M2 Ultra",
+  "logical_cpus": "24",
+  "memory_bytes": "68719476736",
+  "bitcoinpir_git_rev": "db99175ffc4963396da10d53b07d55e43725783c",
+  "whitepaper_git_rev": "eee2f0118158446f1670660412167ce8f4395bd4",
+  "returncode": 0,
+  "stderr_tail": "    Finished `release` profile [optimized] target(s) in 13.06s\n     Running `benchmarks/.dpf_target/release/dpf-round-bench --data-root /Volumes/Bitcoin/data --trials 5 --warmups 1 --database all --level all`\nfull_948454 index: /Volumes/Bitcoin/data/checkpoints/948454/batch_pir_cuckoo.bin\n  warmup touch checksum 17\n  warmup 1/1\n  trial 1/5\n  trial 2/5\n  trial 3/5\n  trial 4/5\n  trial 5/5\nfull_948454 chunk: /Volumes/Bitcoin/data/checkpoints/948454/chunk_pir_cuckoo.bin\n  warmup touch checksum c1\n  warmup 1/1\n  trial 1/5\n  trial 2/5\n  trial 3/5\n  trial 4/5\n  trial 5/5\ndelta_940611_948454 index: /Volumes/Bitcoin/data/deltas/940611_948454/batch_pir_cuckoo.bin\n  warmup touch checksum 46\n  warmup 1/1\n  trial 1/5\n  trial 2/5\n  trial 3/5\n  trial 4/5\n  trial 5/5\ndelta_940611_948454 chunk: /Volumes/Bitcoin/data/deltas/940611_948454/chunk_pir_cuckoo.bin\n  warmup touch checksum dc\n  warmup 1/1\n  trial 1/5\n  trial 2/5\n  trial 3/5\n  trial 4/5\n  trial 5/5\ndelta_940611_944000 index: /Volumes/Bitcoin/data/deltas/940611_944000/batch_pir_cuckoo.bin\n  warmup touch checksum c6\n  warmup 1/1\n  trial 1/5\n  trial 2/5\n  trial 3/5\n  trial 4/5\n  trial 5/5\ndelta_940611_944000 chunk: /Volumes/Bitcoin/data/deltas/940611_944000/chunk_pir_cuckoo.bin\n  warmup touch checksum 90\n  warmup 1/1\n  trial 1/5\n  trial 2/5\n  trial 3/5\n  trial 4/5\n  trial 5/5"
+}
