@@ -1,0 +1,9 @@
+{
+  "system": "macOS-26.5.1-arm64-arm-64bit",
+  "cpu": "Apple M2 Ultra",
+  "physical_cpus": 24,
+  "logical_cpus": 24,
+  "memory_bytes": 68719476736,
+  "macos": "ProductName:\t\tmacOS\nProductVersion:\t\t26.5.1\nBuildVersion:\t\t25F80",
+  "bitcoinpir_git_rev": "db99175ffc4963396da10d53b07d55e43725783c"
+}

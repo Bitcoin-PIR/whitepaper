@@ -13,3 +13,13 @@ The local build uses XeLaTeX and BibTeX:
 ```
 
 The generated paper is `main.pdf`.
+
+## Benchmark Tables
+
+The evaluation section includes generated artifact-size and DPF communication
+tables. Regenerate them from the local Bitcoin PIR artifact root with:
+
+```bash
+./benchmarks/collect_artifact_metrics.py
+./build.sh
+```
