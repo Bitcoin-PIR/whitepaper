@@ -59,8 +59,8 @@ latency.
 | Artifact sizes and DPF wire cost | Deterministic CSV/TeX from `collect_artifact_metrics.py`. | Add future checkpoint and verify deterministic root bundle provenance. |
 | Local scan baseline | 30 warm-cache trials over current real artifacts. | Add cold-cache runs and explain storage/cache conditions. |
 | DPF-PIR local online round | 30 warm-cache trials over current real artifacts; verifies selected bins. | Add deployed WebSocket, wallet query assignment, and Merkle proof retrieval/verification. |
-| HarmonyPIR offline hints | 3 warm-cache trials over current real artifacts for HMR12 and FastPRP. | Increase selected online configurations to 30 trials; add hint download and browser/WASM client timing. |
-| HarmonyPIR online query | 3 warm-cache trials over current real artifacts for HMR12 and FastPRP; verifies recovered bins. | Add 30-trial selected configurations and deployed query-server placement. |
+| HarmonyPIR offline hints | 3 warm-cache trials over current real artifacts for HMR12 and FastPRP. | Add networked hint download timing and increase expensive preprocessing repetitions where final claims need tighter tails. |
+| HarmonyPIR online query | 30 warm-cache trials over current real artifacts for HMR12 and FastPRP; verifies recovered bins. | Add networked hint download, browser/WASM client timing, and deployed query-server placement. |
 | OnionPIR | Synthetic-capacity phase timing only. | Replace with a correctness-preserving real-artifact run before using it as end-to-end evidence. |
 | Merkle proof path | Artifact sizes are recorded indirectly. | Add proof retrieval and verification timing for each protocol path. |
 
@@ -88,12 +88,12 @@ Current local warm-cache commands:
 ./benchmarks/benchmark_scan_latency.py --trials 30 --warmups 1
 ./benchmarks/benchmark_dpf_round_latency.py --trials 30 --warmups 1
 ./benchmarks/benchmark_harmony_hint_latency.py --trials 3 --warmups 1
-./benchmarks/benchmark_harmony_online_latency.py --trials 3 --warmups 1
+./benchmarks/benchmark_harmony_online_latency.py --trials 30 --warmups 1
 ./benchmarks/benchmark_onionpir_synthetic.py
 ./build.sh
 ```
 
-For a selected 30-trial HarmonyPIR online follow-up, start with:
+To rerun only one selected HarmonyPIR online row while iterating, use:
 
 ```bash
 ./benchmarks/benchmark_harmony_online_latency.py \

@@ -134,7 +134,7 @@ def write_tex(path: Path, rows: list[dict[str, object]]) -> None:
         "\\hline",
         "\\end{tabular}",
         "}%",
-        "\\caption{Pilot local warm-cache HarmonyPIR online-query benchmark over current real cuckoo artifacts. Each trial loads one client group for every PBC group from precomputed hints, builds one padded request per group, serves those requests from the local mapped artifact, processes responses, and verifies recovered bins. Setup time is shown separately from online request/server/process time and excludes network latency.}",
+        "\\caption{Local warm-cache HarmonyPIR online-query benchmark over current real cuckoo artifacts. Each trial loads one client group for every PBC group from precomputed hints, builds one padded request per group, serves those requests from the local mapped artifact, processes responses, and verifies recovered bins. Setup time is shown separately from online request/server/process time and excludes network latency.}",
         "\\label{tab:harmony-online-benchmark}",
         "\\end{table}",
         "",
