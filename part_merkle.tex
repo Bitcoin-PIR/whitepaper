@@ -27,7 +27,7 @@ where $\mathsf{bin}_{g,i}$ is the raw byte contents of the bin ($\texttt{slots\_
 
 \textbf{Super-root.} Concatenating all 155 per-group roots in a canonical order (75 index roots followed by 80 chunk roots) and hashing with SHA-256 yields a single 32-byte \emph{super-root} that commits the entire database:
 $$R^* = \mathsf{SHA256}\bigl(R_1 \,\|\, R_2 \,\|\, \cdots \,\|\, R_{155}\bigr).$$
-The super-root, together with the database version, is what clients compare across servers or against an out-of-band trust anchor. One 32-byte value covers every bin of every group at both levels.
+The super-root, together with the database version, is what clients compare across servers or against the database-authenticity anchor described in Section~\ref{sec:database-authenticity}. One 32-byte value covers every bin of every group at both levels.
 
 \subsection{Storage Layout}
 \label{sec:merkle-storage}
