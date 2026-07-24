@@ -29,16 +29,16 @@ fi
 
 # First pass xelatex compilation. Undefined references are warnings; an actual
 # non-zero exit is a build failure and must not be hidden from CI.
-xelatex -halt-on-error -interaction=nonstopmode main.tex > /dev/null
+xelatex -halt-on-error -interaction=nonstopmode main.tex
 
 # BibTeX compilation
-bibtex main > /dev/null
+bibtex main
 
 # Second pass xelatex compilation
-xelatex -halt-on-error -interaction=nonstopmode main.tex > /dev/null
+xelatex -halt-on-error -interaction=nonstopmode main.tex
 
 # Third pass xelatex compilation (finalize references)
-xelatex -halt-on-error -interaction=nonstopmode main.tex > /dev/null
+xelatex -halt-on-error -interaction=nonstopmode main.tex
 
 # Check if PDF was generated
 if [ -f "main.pdf" ]; then
