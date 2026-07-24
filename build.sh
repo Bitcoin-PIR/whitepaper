@@ -44,8 +44,11 @@ if [ -f "main.pdf" ]; then
     # Clean up auxiliary files automatically
     rm -f main.aux main.log main.out main.toc main.lof main.lot main.bbl main.blg
     
-    # Open the PDF
-    open main.pdf
+    # Keep local convenience without forcing CI/headless reproducibility jobs
+    # to launch a desktop viewer.
+    if [ "${OPEN_PDF:-1}" = "1" ] && command -v open > /dev/null 2>&1; then
+        open main.pdf
+    fi
 else
     echo "Error: Build failed! PDF was not generated. Check the log file for errors." >&2
     exit 1
