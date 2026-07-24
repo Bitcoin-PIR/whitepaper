@@ -1,0 +1,43 @@
+name: Whitepaper build
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  reproducible-pdf:
+    runs-on: ubuntu-24.04
+    env:
+      SOURCE_DATE_EPOCH: "0"
+      TZ: UTC
+      OPEN_PDF: "0"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install TeX toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends \
+            texlive-bibtex-extra \
+            texlive-fonts-extra \
+            texlive-fonts-recommended \
+            texlive-latex-extra \
+            texlive-xetex
+      - name: Build twice from clean copies
+        run: |
+          mkdir -p /tmp/whitepaper-a /tmp/whitepaper-b
+          tar --exclude=.git --exclude=main.pdf -cf - . | tar -xf - -C /tmp/whitepaper-a
+          tar --exclude=.git --exclude=main.pdf -cf - . | tar -xf - -C /tmp/whitepaper-b
+          (cd /tmp/whitepaper-a && ./build.sh)
+          (cd /tmp/whitepaper-b && ./build.sh)
+          sha256sum /tmp/whitepaper-a/main.pdf /tmp/whitepaper-b/main.pdf
+          cmp /tmp/whitepaper-a/main.pdf /tmp/whitepaper-b/main.pdf
+      - name: Upload generated paper
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: whitepaper
+          path: /tmp/whitepaper-a/main.pdf
+          if-no-files-found: error

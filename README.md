@@ -14,6 +14,16 @@ The local build uses XeLaTeX and BibTeX:
 
 The generated paper is `main.pdf`.
 
+For a headless, deterministic build, pin the source-date environment and
+disable the local PDF viewer:
+
+```bash
+SOURCE_DATE_EPOCH=0 TZ=UTC OPEN_PDF=0 ./build.sh
+```
+
+CI builds the paper twice from clean source copies and requires byte-identical
+PDF output. The tracked `main.pdf` is regenerated with the same command.
+
 ## Benchmark Tables
 
 The evaluation section includes generated artifact-size and DPF communication
